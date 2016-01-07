@@ -24,3 +24,19 @@ REGISTER /usr/hdp/2.3.2.0-2950/hive-hcatalog/share/hcatalog/hive-hcatalog-pig-ad
 stock_data = LOAD 'stockinfo' USING org.apache.hive.hcatalog.pig.HCatLoader();
 dump stock_data;
 ```
+
+### Or run from command prompt
+```
+cat test.pig 
+REGISTER /usr/hdp/2.3.2.0-2950/hive-hcatalog/share/hcatalog/hive-hcatalog-pig-adapter.jar;
+stock_data = LOAD 'stockinfo' USING org.apache.hive.hcatalog.pig.HCatLoader();
+store stock_data into '/user/guest/stockdata_copy' using PigStorage(',');
+
+pig -useHCatalog -f test.pig
+```
+
+### Or run using WebHCat
+```
+hadoop fs -put -f test.pig /user/guest
+curl -d user.name=guest -d file=test.pig -d arg=-v 'http://localhost:50111/templeton/v1/pig'
+```
